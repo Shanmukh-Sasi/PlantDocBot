@@ -1,0 +1,18 @@
+# Ignore virtual environment folder
+.venv/
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
+models/
+*.Infosys_Text_Classification.ipynb
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore Jupyter notebook checkpoints
+.ipynb_checkpoints/
+
+# Optional: ignore large model files
+*.pth
+*.pt
