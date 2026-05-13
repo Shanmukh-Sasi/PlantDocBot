@@ -7,8 +7,8 @@ import torch
 import torchvision.transforms as transforms
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 from models.PlantDiseaseModel import PlantDiseaseModel, PLANT_DISEASE_CLASSES
-from database import diagnosis_collection
-import datetime
+# from database import diagnosis_collection
+# import datetime
 
 DEVICE = torch.device("cpu")
 CNN_MODEL_PATH = "models/Image_Model.pth"
@@ -158,17 +158,17 @@ async def predict(file: UploadFile = File(None), text: str = Form(None)):
         raise HTTPException(status_code=400, detail="No input provided.")
 
     # Save Prediction to MongoDB
-    if file:
-        record = {
-            "image_name": file.filename,
-            "disease": result.image_prediction,
-            "confidence": float(result.image_confidence),
-            "date": str(datetime.datetime.now())
-        }
-        try:
-            diagnosis_collection.insert_one(record)
-            print(f"Saved prediction to DB: {result.image_prediction}")
-        except Exception as e:
-            print(f"Failed to save to DB: {e}")
+    # if file:
+    #     record = {
+    #         "image_name": file.filename,
+    #         "disease": result.image_prediction,
+    #         "confidence": float(result.image_confidence),
+    #         "date": str(datetime.datetime.now())
+    #     }
+    #     try:
+    #         diagnosis_collection.insert_one(record)
+    #         print(f"Saved prediction to DB: {result.image_prediction}")
+    #     except Exception as e:
+    #         print(f"Failed to save to DB: {e}")
 
     return result
