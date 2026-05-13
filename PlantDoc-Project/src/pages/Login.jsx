@@ -1,18 +1,31 @@
 import { useState } from "react";
 import "../App.css";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
+    const navigate = useNavigate();
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    const handleLogin = async () => {
-        await fetch("http://127.0.0.1:8000/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ email, password }),
-        });
+    const handleLogin = () => {
+        const storedUser = JSON.parse(localStorage.getItem("plantdocUser"));
+
+        if (!storedUser) {
+            alert("No user found. Please register first.");
+            return;
+        }
+
+        if (
+            storedUser.email === email &&
+            storedUser.password === password
+        ) {
+            alert("Login successful!");
+            localStorage.setItem("isLoggedIn", "true");
+            window.location.href = "/";
+        } else {
+            alert("Invalid email or password");
+        }
     };
 
     return (
@@ -46,15 +59,3 @@ export default function Login() {
         </div>
     );
 }
-const handleLogin = async () => {
-    const res = await fetch("http://127.0.0.1:8000/login", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-    });
-
-    const data = await res.json();
-    alert(data.message);
-};

@@ -1,19 +1,30 @@
 import { useState } from "react";
 import "../App.css";
+import { useNavigate } from "react-router-dom";
 
 export default function Register() {
+    const navigate = useNavigate();
+
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    const handleRegister = async () => {
-        await fetch("http://127.0.0.1:8000/register", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ name, email, password }),
-        });
+    const handleRegister = () => {
+        if (!name || !email || !password) {
+            alert("Please fill all fields");
+            return;
+        }
+
+        const user = {
+            name,
+            email,
+            password,
+        };
+
+        localStorage.setItem("plantdocUser", JSON.stringify(user));
+
+        alert("Registration successful!");
+        navigate("/login");
     };
 
     return (
@@ -55,15 +66,3 @@ export default function Register() {
         </div>
     );
 }
-const handleRegister = async () => {
-    const res = await fetch("http://127.0.0.1:8000/register", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, email, password }),
-    });
-
-    const data = await res.json();
-    alert(data.message);
-};
