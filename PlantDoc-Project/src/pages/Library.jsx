@@ -1,8 +1,44 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import '../App.css';
 
 export default function Library() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [recentSearches, setRecentSearches] = useState([]);
+
+  // Fetch recent searches from SQLite backend
+  useEffect(() => {
+    fetchRecentSearches();
+  }, []);
+
+  const fetchRecentSearches = async () => {
+    try {
+      const isProd = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+      const apiUrl = isProd ? '/api' : 'http://127.0.0.1:8000';
+      const res = await fetch(`${apiUrl}/api/recent-searches`);
+      if (res.ok) {
+        const data = await res.json();
+        setRecentSearches(data.searches || []);
+      }
+    } catch (err) {
+      console.error("Failed to fetch recent searches:", err);
+    }
+  };
+
+  const saveSearchTerm = async (term) => {
+    if (!term || term.length < 3) return;
+    try {
+      const isProd = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+      const apiUrl = isProd ? '/api' : 'http://127.0.0.1:8000';
+      await fetch(`${apiUrl}/api/save-search`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ term })
+      });
+      fetchRecentSearches(); // Refresh history
+    } catch (err) {
+      console.error("Failed to save search:", err);
+    }
+  };
 
   const diseases = [
     { 
@@ -80,6 +116,8 @@ export default function Library() {
             placeholder="Search by disease, plant, or symptom..." 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            onBlur={() => saveSearchTerm(searchTerm)}
+            onKeyPress={(e) => e.key === 'Enter' && saveSearchTerm(searchTerm)}
             className="custom-input"
             style={{ 
               paddingLeft: '3rem', 
@@ -96,6 +134,33 @@ export default function Library() {
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
         </div>
+
+        {/* Recent Searches History */}
+        {recentSearches.length > 0 && (
+          <div style={{ marginTop: '1.5rem', display: 'flex', gap: '0.8rem', justifyContent: 'center', flexWrap: 'wrap', alignItems: 'center' }}>
+            <span style={{ fontSize: '0.85rem', color: '#64748b' }}>Recent:</span>
+            {recentSearches.map((term, idx) => (
+              <button
+                key={idx}
+                onClick={() => setSearchTerm(term)}
+                style={{
+                  background: 'rgba(52, 211, 153, 0.08)',
+                  border: '1px solid rgba(52, 211, 153, 0.2)',
+                  color: 'var(--primary)',
+                  padding: '4px 12px',
+                  borderRadius: '20px',
+                  fontSize: '0.85rem',
+                  cursor: 'pointer',
+                  transition: '0.2s'
+                }}
+                onMouseOver={(e) => e.target.style.background = 'rgba(52, 211, 153, 0.15)'}
+                onMouseOut={(e) => e.target.style.background = 'rgba(52, 211, 153, 0.08)'}
+              >
+                {term}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="disease-grid">
