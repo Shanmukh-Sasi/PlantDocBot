@@ -84,7 +84,12 @@ export default function App() {
       setResult(data);
     } catch (err) {
       console.error(err);
-      alert(`Prediction Error: ${err.message}\n(Backend status: OK)`);
+      // Detailed error for Mixed Content (HTTPS -> HTTP)
+      if (err.message === "Failed to fetch") {
+        alert("Connection Error: The browser is blocking the request to the insecure backend (HTTP) from this secure site (HTTPS).\n\nTo fix this for others, your backend needs an SSL certificate (HTTPS). For now, you can allow 'Insecure content' in your browser settings for this site.");
+      } else {
+        alert(`Prediction Error: ${err.message}`);
+      }
     } finally {
       setLoading(false);
     }
@@ -172,7 +177,7 @@ export default function App() {
               </div>
             )}
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            <div className="results-grid">
 
               {/* Valid Plant Result */}
               {result.image_prediction && !isRejected && (
