@@ -57,6 +57,10 @@ export default function App() {
   const [loading, setLoading] = useState(false);
 
   const handlePredict = async () => {
+    // Determine the API URL: Use /api in production, localhost in development
+    const isProd = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+    const apiUrl = isProd ? '/api' : 'http://127.0.0.1:8000';
+
     if (!file && !text) {
       alert("Please upload an image or enter text.");
       return;
@@ -70,8 +74,8 @@ export default function App() {
     if (text) formData.append("text", text);
 
     try {
-      console.log("Fetching from:", `${import.meta.env.VITE_API_URL}/predict`);
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/predict`, {
+      console.log("Fetching from:", `${apiUrl}/predict`);
+      const res = await fetch(`${apiUrl}/predict`, {
         method: "POST",
         body: formData,
       });
