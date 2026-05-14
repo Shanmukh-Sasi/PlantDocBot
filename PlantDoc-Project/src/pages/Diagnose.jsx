@@ -57,7 +57,6 @@ export default function App() {
   const [loading, setLoading] = useState(false);
 
   const handlePredict = async () => {
-    // Determine the API URL: Use /api in production, localhost in development
     const isProd = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
     const apiUrl = isProd ? '/api' : 'http://127.0.0.1:8000';
 
@@ -74,7 +73,6 @@ export default function App() {
     if (text) formData.append("text", text);
 
     try {
-      console.log("Fetching from:", `${apiUrl}/predict`);
       const res = await fetch(`${apiUrl}/predict`, {
         method: "POST",
         body: formData,
@@ -88,10 +86,8 @@ export default function App() {
       const data = await res.json();
       setResult(data);
     } catch (err) {
-      console.error(err);
-      // Detailed error for Mixed Content (HTTPS -> HTTP)
       if (err.message === "Failed to fetch") {
-        alert("Connection Error: The browser is blocking the request to the insecure backend (HTTP) from this secure site (HTTPS).\n\nTo fix this for others, your backend needs an SSL certificate (HTTPS). For now, you can allow 'Insecure content' in your browser settings for this site.");
+        alert("Connection Error: Mixed Content blocked. Please allow insecure content or use HTTPS for the backend.");
       } else {
         alert(`Prediction Error: ${err.message}`);
       }
@@ -103,10 +99,13 @@ export default function App() {
   const isRejected = result?.image_prediction === 'Not a plant leaf image';
 
   return (
-    <div className="app-container">
-      {/* Main Grid */}
-      <main className="main-content">
-        {/* Image Card */}
+    <div className="container" style={{ padding: '4rem 1rem' }}>
+      <header className="library-header">
+        <h1 className="library-title">AI Diagnosis System</h1>
+        <p className="hero-subtitle">Upload a photo or describe symptoms for instant analysis</p>
+      </header>
+
+      <main className="main-content" style={{ margin: '0 auto' }}>
         <div className="glass-card">
           <div className="card-icon"><IconLeaf /></div>
           <h2 className="card-title">Image Analysis</h2>
@@ -117,170 +116,118 @@ export default function App() {
             onChange={(e) => setFile(e.target.files[0])}
             id="image-upload"
           />
-          <p className="subtitle" style={{ fontSize: '0.85rem' }}>
-            Upload a clear plant leaf image for visual detection
+          <p className="label" style={{ marginTop: '0.5rem', fontSize: '0.75rem' }}>
+            Supported: JPG, PNG, WEBP
           </p>
         </div>
 
-        {/* Text Card */}
         <div className="glass-card">
           <div className="card-icon"><IconMessage /></div>
-          <h2 className="card-title">Description Analysis</h2>
+          <h2 className="card-title">Symptom Description</h2>
           <textarea
             className="custom-textarea"
-            placeholder="Describe the plant's health or symptoms..."
+            placeholder="e.g. Yellow spots on tomato leaves..."
             value={text}
             onChange={(e) => setText(e.target.value)}
           ></textarea>
-          <p className="subtitle" style={{ fontSize: '0.85rem' }}>
-            We'll analyze the sentiment and keywords
+          <p className="label" style={{ marginTop: '0.5rem', fontSize: '0.75rem' }}>
+            Optional: Describe what you see
           </p>
         </div>
       </main>
 
-      {/* Action */}
-      <button
-        className="predict-btn"
-        onClick={handlePredict}
-        disabled={loading}
-      >
-        {loading ? "Analyzing..." : "Run Diagnosis"}
-      </button>
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '3rem' }}>
+        <button
+          className="predict-btn"
+          onClick={handlePredict}
+          disabled={loading}
+        >
+          {loading ? "Analyzing..." : "Run AI Diagnosis"}
+        </button>
+      </div>
 
-      {/* Results */}
       {result && (
-        <section className="result-container">
-          <div className="glass-card" style={{ animation: 'none' }}>
-
-            {/* Header */}
+        <section className="result-container" style={{ margin: '4rem auto 0', maxWidth: '900px' }}>
+          <div className="glass-card" style={{ padding: '2.5rem' }}>
             <div className="diagnosis-header">
               <IconClipboard />
               <h2>Diagnosis Report</h2>
             </div>
 
-            {/* NON-PLANT REJECTION BANNER */}
             {isRejected && (
               <div style={{
-                background: 'rgba(239, 68, 68, 0.10)',
-                border: '1px solid rgba(239, 68, 68, 0.45)',
-                borderRadius: '10px',
-                padding: '1.1rem 1.4rem',
-                marginBottom: '1rem',
+                background: 'rgba(239, 68, 68, 0.1)',
+                border: '1px solid rgba(239, 68, 68, 0.3)',
+                borderRadius: '16px',
+                padding: '1.5rem',
+                marginBottom: '2rem',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '1rem'
+                gap: '1.2rem'
               }}>
                 <IconXCircle />
                 <div>
-                  <p style={{ color: '#f87171', fontWeight: '700', fontSize: '0.95rem', margin: 0, letterSpacing: '0.02em' }}>
-                    Invalid Input — Not a Plant Leaf
-                  </p>
-                  <p style={{ color: '#94a3b8', fontSize: '0.82rem', margin: '0.3rem 0 0' }}>
-                    The uploaded image does not appear to be a plant leaf. Please provide a clear leaf photograph for accurate diagnosis.
-                  </p>
+                  <p style={{ color: '#f87171', fontWeight: '700', fontSize: '1rem', margin: 0 }}>Invalid Input</p>
+                  <p style={{ color: '#94a3b8', fontSize: '0.85rem', marginTop: '0.2rem' }}>The image provided is not recognized as a plant leaf.</p>
                 </div>
               </div>
             )}
 
             <div className="results-grid">
-
-              {/* Valid Plant Result */}
               {result.image_prediction && !isRejected && (
                 <div className="stat-item" style={{
-                  background: 'rgba(52, 211, 153, 0.07)',
-                  border: '1px solid rgba(52, 211, 153, 0.25)',
-                  borderRadius: '10px',
-                  padding: '0.9rem'
+                  background: 'rgba(52, 211, 153, 0.05)',
+                  border: '1px solid var(--border)',
+                  borderRadius: '16px',
+                  padding: '1.5rem'
                 }}>
-                  <span className="label">
-                    <IconCheckCircle />
-                    Detected Condition
-                  </span>
-                  <span className="value" style={{ color: 'var(--primary)', marginTop: '0.3rem', display: 'block' }}>
+                  <span className="label"><IconCheckCircle /> Condition</span>
+                  <span className="value" style={{ color: 'var(--primary)', display: 'block', fontSize: '1.4rem', margin: '0.5rem 0' }}>
                     {result.image_prediction.replace(/_/g, ' ')}
                   </span>
-                  <div style={{ marginTop: '0.75rem', paddingTop: '0.75rem', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-                    <span className="label">Visual Confidence</span>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginTop: '0.3rem' }}>
-                      <div style={{
-                        flex: 1,
-                        height: '6px',
-                        background: 'rgba(255,255,255,0.08)',
-                        borderRadius: '99px',
-                        overflow: 'hidden'
-                      }}>
-                        <div style={{
-                          width: `${(result.image_confidence * 100).toFixed(0)}%`,
-                          height: '100%',
-                          background: 'var(--primary)',
-                          borderRadius: '99px',
-                          transition: 'width 0.6s ease'
-                        }} />
+                  <div style={{ marginTop: '1rem' }}>
+                    <span className="label">Confidence</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '0.4rem' }}>
+                      <div style={{ flex: 1, height: '8px', background: 'rgba(255,255,255,0.05)', borderRadius: '10px', overflow: 'hidden' }}>
+                        <div style={{ width: `${(result.image_confidence * 100)}%`, height: '100%', background: 'var(--primary)', borderRadius: '10px' }} />
                       </div>
-                      <span className="value" style={{ fontSize: '0.9rem', minWidth: '48px', textAlign: 'right' }}>
-                        {(result.image_confidence * 100).toFixed(1)}%
-                      </span>
+                      <span className="value" style={{ fontSize: '0.9rem' }}>{(result.image_confidence * 100).toFixed(1)}%</span>
                     </div>
                   </div>
                 </div>
               )}
 
-              {/* Text Result */}
               {result.text_prediction && (
-                <div className="stat-item">
+                <div className="stat-item" style={{
+                  background: 'rgba(255,255,255,0.03)',
+                  border: '1px solid var(--border)',
+                  borderRadius: '16px',
+                  padding: '1.5rem'
+                }}>
                   <span className="label">Text Analysis</span>
-                  <span className="value" style={{
-                    color: result.text_prediction.includes('Symptoms:') || result.text_prediction === 'NEGATIVE' 
-                           ? '#f87171' : '#34d399',
-                    display: 'block',
-                    marginTop: '0.3rem'
+                  <span className="value" style={{ 
+                    color: result.text_prediction === 'NEGATIVE' ? '#f87171' : '#34d399',
+                    display: 'block', margin: '0.5rem 0' 
                   }}>
                     {result.text_prediction}
                   </span>
-                  <div style={{ marginTop: '0.75rem', paddingTop: '0.75rem', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-                    <span className="label">Analysis Confidence</span>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginTop: '0.3rem' }}>
-                      <div style={{
-                        flex: 1,
-                        height: '6px',
-                        background: 'rgba(255,255,255,0.08)',
-                        borderRadius: '99px',
-                        overflow: 'hidden'
-                      }}>
-                        <div style={{
-                          width: `${(result.text_confidence * 100).toFixed(0)}%`,
-                          height: '100%',
-                          background: result.text_prediction.includes('Symptoms:') || result.text_prediction === 'NEGATIVE' 
-                                      ? '#f87171' : '#34d399',
-                          borderRadius: '99px',
-                          transition: 'width 0.6s ease'
-                        }} />
-                      </div>
-                      <span className="value" style={{ fontSize: '0.9rem', minWidth: '48px', textAlign: 'right' }}>
-                        {(result.text_confidence * 100).toFixed(1)}%
-                      </span>
-                    </div>
-                  </div>
-                  <p className="subtitle" style={{ marginTop: '0.75rem', fontSize: '0.82rem', textAlign: 'left', lineHeight: '1.5' }}>
-                    {SENTIMENT_DESCRIPTIONS[result.text_prediction] || "Direct plant symptoms were identified from your description for analysis."}
+                  <p style={{ color: '#94a3b8', fontSize: '0.85rem', lineHeight: '1.5' }}>
+                    {SENTIMENT_DESCRIPTIONS[result.text_prediction] || "Symptom analysis complete."}
                   </p>
                 </div>
               )}
             </div>
 
-            {/* Expert Recommendation */}
             {result.image_prediction && !isRejected && (
-              <div className="recommendation-box">
+              <div className="recommendation-box" style={{ marginTop: '2rem' }}>
                 <span className="label" style={{ color: 'var(--primary)', fontWeight: '700' }}>
-                  <IconShield />
-                  Expert Recommendation
+                  <IconShield /> Treatment Plan
                 </span>
-                <p className="rec-text">
-                  {RECOMMENDATIONS[result.image_prediction] || "No specific recommendation found for this condition."}
+                <p className="rec-text" style={{ marginTop: '0.8rem' }}>
+                  {RECOMMENDATIONS[result.image_prediction] || "Consult a local specialist for specific care."}
                 </p>
               </div>
             )}
-
           </div>
         </section>
       )}

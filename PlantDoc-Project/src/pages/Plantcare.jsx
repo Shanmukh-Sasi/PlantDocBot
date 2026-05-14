@@ -52,79 +52,31 @@ const tips = [
 
 const PlantCare = () => {
   return (
-    <div className="app-container">
-      <section className="result-container">
-        <div className="glass-card" style={{ maxWidth: "1200px", margin: "0 auto" }}>
-          
-          <div className="diagnosis-header">
-            <IconLeaf />
-            <h2>Plant Care Guide</h2>
+    <div className="container" style={{ paddingTop: '4rem', paddingBottom: '4rem' }}>
+      <div className="library-header">
+        <h2 className="library-title">Plant Care Guide</h2>
+        <p className="hero-subtitle" style={{ maxWidth: '600px', margin: '1rem auto 3rem' }}>
+          Essential care practices to keep your crops healthy and productive.
+        </p>
+      </div>
+
+      <div className="disease-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))' }}>
+        {tips.map((tip, index) => (
+          <div key={index} className="glass-card" style={{ padding: '2.5rem', textAlign: 'center' }}>
+            <div style={{ color: "var(--primary)", marginBottom: '1.5rem', display: 'flex', justifyContent: 'center' }}>
+              {tip.icon}
+            </div>
+            <h3 style={{ color: "white", fontSize: "1.3rem", marginBottom: "1rem" }}>
+              {tip.title}
+            </h3>
+            <p style={{ color: "#94a3b8", lineHeight: "1.6", fontSize: "1rem" }}>
+              {tip.desc}
+            </p>
           </div>
-
-          <p
-            className="subtitle"
-            style={{
-              textAlign: "center",
-              fontSize: "1rem",
-              marginBottom: "2rem",
-            }}
-          >
-            Essential care practices to keep your crops healthy and productive.
-          </p>
-
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-              gap: "1.5rem",
-            }}
-          >
-            {tips.map((tip, index) => (
-              <div
-                key={index}
-                className="stat-item"
-                style={{
-                  padding: "1.5rem",
-                  textAlign: "center",
-                }}
-              >
-                <div
-                  style={{
-                    color: "var(--primary)",
-                    marginBottom: "1rem",
-                    display: "flex",
-                    justifyContent: "center",
-                  }}
-                >
-                  {tip.icon}
-                </div>
-
-                <h3
-                  style={{
-                    color: "white",
-                    fontSize: "1.1rem",
-                    marginBottom: "0.8rem",
-                  }}
-                >
-                  {tip.title}
-                </h3>
-
-                <p
-                  style={{
-                    color: "#94a3b8",
-                    lineHeight: "1.6",
-                    fontSize: "0.95rem",
-                  }}
-                >
-                  {tip.desc}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+        ))}
+      </div>
     </div>
   );
 };
 
-export default PlantCare;
+export default PlantCare;

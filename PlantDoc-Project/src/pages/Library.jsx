@@ -66,18 +66,18 @@ export default function Library() {
   });
 
   return (
-    <div style={{ maxWidth: '1100px', margin: '4rem auto', padding: '0 2rem' }}>
-      <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-        <h2 style={{ fontSize: '2.8rem', marginBottom: '1rem', color: '#fff' }}>Global Disease Database</h2>
-        <p style={{ color: '#94a3b8', fontSize: '1.2rem', marginBottom: '2.5rem', maxWidth: '600px', margin: '0 auto 2.5rem' }}>
+    <div className="container" style={{ paddingTop: '4rem', paddingBottom: '4rem' }}>
+      <div className="library-header">
+        <h2 className="library-title">Global Disease Database</h2>
+        <p style={{ color: '#94a3b8', fontSize: 'clamp(1rem, 2.5vw, 1.2rem)', marginBottom: '2.5rem', maxWidth: '600px', margin: '0 auto 2.5rem' }}>
           Search our comprehensive reference to identify agricultural pathogens and learn proper treatment protocols.
         </p>
 
         {/* Search Bar */}
-        <div style={{ maxWidth: '600px', margin: '0 auto', position: 'relative' }}>
+        <div className="search-container">
           <input 
             type="text" 
-            placeholder="Search by disease, plant, or symptom (e.g., 'blight', 'tomato', 'spots')..." 
+            placeholder="Search by disease, plant, or symptom..." 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="custom-input"
@@ -90,7 +90,7 @@ export default function Library() {
           />
           <svg 
             width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-            style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }}
+            style={{ position: 'absolute', left: '1.2rem', top: '50%', transform: 'translateY(-50%)' }}
           >
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -98,10 +98,10 @@ export default function Library() {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(450px, 1fr))', gap: '2rem' }}>
+      <div className="disease-grid">
         {filteredDiseases.length > 0 ? (
           filteredDiseases.map(d => (
-            <div key={d.name} className="glass-card" style={{ padding: '2rem', textAlign: 'left', animation: 'none' }}>
+            <div key={d.name} className="glass-card" style={{ padding: '2rem', textAlign: 'left' }}>
               <div style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '1rem', marginBottom: '1.5rem' }}>
                 <h3 style={{ color: '#fff', marginBottom: '0.4rem', fontSize: '1.6rem' }}>{d.name}</h3>
                 <span style={{ 
@@ -118,21 +118,21 @@ export default function Library() {
                 </span>
               </div>
               
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
                 <div>
-                  <span style={{ color: '#94a3b8', fontSize: '0.85rem', textTransform: 'uppercase', fontWeight: 'bold' }}>Cause</span>
+                  <span style={{ color: '#94a3b8', fontSize: '0.75rem', textTransform: 'uppercase', fontWeight: 'bold', letterSpacing: '0.5px' }}>Cause</span>
                   <p style={{ color: '#f8fafc', margin: '0.2rem 0 0', fontSize: '1rem' }}>{d.cause}</p>
                 </div>
                 <div>
-                  <span style={{ color: '#94a3b8', fontSize: '0.85rem', textTransform: 'uppercase', fontWeight: 'bold' }}>Symptoms</span>
+                  <span style={{ color: '#94a3b8', fontSize: '0.75rem', textTransform: 'uppercase', fontWeight: 'bold', letterSpacing: '0.5px' }}>Symptoms</span>
                   <p style={{ color: '#f8fafc', margin: '0.2rem 0 0', fontSize: '1rem' }}>{d.symptoms}</p>
                 </div>
                 <div>
-                  <span style={{ color: '#94a3b8', fontSize: '0.85rem', textTransform: 'uppercase', fontWeight: 'bold' }}>Treatment</span>
-                  <p style={{ color: '#fcd34d', margin: '0.2rem 0 0', fontSize: '1rem' }}>{d.treatment}</p>
+                  <span style={{ color: '#94a3b8', fontSize: '0.75rem', textTransform: 'uppercase', fontWeight: 'bold', letterSpacing: '0.5px' }}>Treatment</span>
+                  <p style={{ color: '#fcd34d', margin: '0.2rem 0 0', fontSize: '1rem', fontWeight: '500' }}>{d.treatment}</p>
                 </div>
                 <div>
-                  <span style={{ color: '#94a3b8', fontSize: '0.85rem', textTransform: 'uppercase', fontWeight: 'bold' }}>Prevention</span>
+                  <span style={{ color: '#94a3b8', fontSize: '0.75rem', textTransform: 'uppercase', fontWeight: 'bold', letterSpacing: '0.5px' }}>Prevention</span>
                   <p style={{ color: '#34d399', margin: '0.2rem 0 0', fontSize: '1rem' }}>{d.prevention}</p>
                 </div>
               </div>
@@ -143,7 +143,7 @@ export default function Library() {
             <p style={{ fontSize: '1.2rem' }}>No diseases found matching "{searchTerm}"</p>
             <button 
               onClick={() => setSearchTerm('')}
-              style={{ background: 'none', border: '1px solid var(--primary)', color: 'var(--primary)', padding: '0.5rem 1rem', borderRadius: '4px', marginTop: '1rem', cursor: 'pointer' }}
+              style={{ background: 'none', border: '1px solid var(--primary)', color: 'var(--primary)', padding: '0.5rem 1rem', borderRadius: '8px', marginTop: '1rem', cursor: 'pointer' }}
             >
               Clear Search
             </button>

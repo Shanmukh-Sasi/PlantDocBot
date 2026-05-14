@@ -10,31 +10,39 @@ import './App.css';
 
 export default function Root() {
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div className="root-layout">
       <Navbar />
 
-      <div style={{ flex: 1 }}>
+      <main className="content-area">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/diagnose" element={<App />} />
           <Route path="/library" element={<Library />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          {/* Placeholder routes for others */}
           <Route path="/plantcare" element={<PlantCare />} />
-          <Route path="/about" element={<div style={{ textAlign: 'center', marginTop: '5rem' }}><h2>About PlantDoc AI</h2><p>Built to save harvests worldwide.</p></div>} />
+          <Route path="/about" element={
+            <div className="container" style={{ textAlign: 'center', paddingTop: '6rem' }}>
+              <h2 className="library-title">About PlantDoc AI</h2>
+              <p className="hero-subtitle" style={{ maxWidth: '600px', margin: '1rem auto' }}>
+                PlantDoc AI is a state-of-the-art agricultural diagnostics platform. 
+                Using advanced deep learning models, we help farmers and gardening enthusiasts 
+                identify plant diseases instantly from just a photograph.
+              </p>
+              <div className="glass-card" style={{ maxWidth: '500px', margin: '2rem auto', padding: '2rem' }}>
+                <p style={{ color: 'var(--primary)', fontWeight: '600' }}>Our Mission</p>
+                <p style={{ color: '#94a3b8', marginTop: '0.5rem' }}>To empower farmers worldwide with accessible technology to protect their harvests and ensure food security.</p>
+              </div>
+            </div>
+          } />
         </Routes>
-      </div>
+      </main>
 
-      <footer style={{
-        padding: '2rem',
-        textAlign: 'center',
-        borderTop: '1px solid rgba(255,255,255,0.05)',
-        color: '#64748b',
-        fontSize: '0.9rem',
-        marginTop: 'auto'
-      }}>
-        © {new Date().getFullYear()} PlantDoc AI. Advanced botanical diagnosis platform.
+      <footer className="footer">
+        <div className="container">
+          <p>© {new Date().getFullYear()} PlantDoc AI. Advanced botanical diagnosis platform.</p>
+          <p style={{ marginTop: '0.5rem', opacity: 0.7, fontSize: '0.8rem' }}>Developed for sustainable agriculture.</p>
+        </div>
       </footer>
     </div>
   );
